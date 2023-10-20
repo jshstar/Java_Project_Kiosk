@@ -3,7 +3,7 @@ package kiosk;
 public class FoodData extends Goods{
      // 음식 데이터 및 유저의 장바구니 클래스
      public String foodname; // 음식명
-     public double[] chosePrice = new double[2]; // 가격 0: Single 1. Double
+     public double[] chosePrice = new double[2]; // 가격 0: Single 1: Double
      public double price; // 주문할 음식의 가격
      public String foodExplain;// 음식 설명
      public int foodcount; // 주문한 음식 개수
@@ -22,7 +22,7 @@ public class FoodData extends Goods{
         this.foodExplain = foodExplain;
         this.foodcount = count;
     }
-    public String getName(){
+    public String getFoodName(){
         return this.foodname;
     }
     public int getFoodCount(){

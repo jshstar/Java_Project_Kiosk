@@ -53,6 +53,7 @@ public class Goods extends Menu {
                 case "10" -> { // 종료
                     break end;
                 }
+                default -> System.out.println("잘못 입력하셨습니다. 다시 선택해 주세요.");
             }
         }
     }
@@ -67,9 +68,10 @@ public class Goods extends Menu {
         System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.");
         System.out.println();
         System.out.println(FOODTITLE[Integer.parseInt(foodtype)-1]);
+        // 음식 Data 출력
         for (int i = 0; i <  foodList.size(); i++) {
             System.out.printf("%d. %-15s | W %.1f | %s%n"
-                    , i + 1, foodList.get(i).getName(),foodList.get(i).getChosePrice()[0], foodList.get(i).getExplain());
+                    , i + 1, foodList.get(i).getFoodName(),foodList.get(i).getChosePrice()[0], foodList.get(i).getExplain());
         }
         System.out.println("-------------------------------------------------------");
         foodtype = sc.nextLine();
@@ -84,13 +86,13 @@ public class Goods extends Menu {
         int index = Integer.parseInt(foodType)-1;
         if(foodList.get(index).getChosePrice()[1] !=0)
             size = chooseSize(foodList, index);
-        String name = foodList.get(index).getName();
+        String name = foodList.get(index).getFoodName();
         String explain = foodList.get(index).getExplain();
         double price = foodList.get(index).getChosePrice()[size];
         // 출력
         System.out.println("-------------------------------------------------------");
         System.out.printf("%-15s | W %.1f | %s%n"
-                ,foodList.get(index).getName()
+                ,foodList.get(index).getFoodName()
                 ,foodList.get(index).getChosePrice()[size]
                 , foodList.get(index).getExplain());
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
@@ -101,16 +103,16 @@ public class Goods extends Menu {
         // 장바구니 추가시 유저의 장바구니에 데이터 입력
         if(addtype.equals("1"))
         {
-            System.out.println(foodList.get(index).getName() + "가 장바구니에 추가되었습니다.");
+            System.out.println(foodList.get(index).getFoodName() + "가 장바구니에 추가되었습니다.");
             System.out.println();
             if(!orderBasket.isEmpty())
             {
                 boolean flag = false;
                 for (int i = 0; i < orderBasket.size(); i++) {
-                    if(orderBasket.get(i).foodname.equals(foodList.get(index).foodname)
-                            && orderBasket.get(i).price == foodList.get(index).chosePrice[size]  )
+                    if(orderBasket.get(i).getFoodName().equals(foodList.get(index).foodname)
+                            && orderBasket.get(i).getPrice() == foodList.get(index).chosePrice[size]  )
                     {
-                        orderBasket.get(index).foodcount++;
+                        orderBasket.get(index).setFoodCount(1);
                         flag =true;
                     }
                 }
@@ -130,7 +132,7 @@ public class Goods extends Menu {
         System.out.println("-------------------------------------------------------");
 
         System.out.printf("%-15s | W %.1f | %s%n"
-                ,foodData.get(index).getName()
+                ,foodData.get(index).getFoodName()
                 ,foodData.get(index).getChosePrice()[0]
                 , foodData.get(index).getExplain());
         System.out.println("위 메뉴의 어떤 옵션으로 추가하시겠습니까?");
