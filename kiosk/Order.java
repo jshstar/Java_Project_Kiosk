@@ -38,7 +38,7 @@ public class Order extends Menu{
             }
 
             System.out.println(ORDERTITLE[1]);
-            System.out.println("W " + totalPrice);
+            System.out.println("W " + Math.round(totalPrice*100)/100.0); // double 형의 출력근사치 삭제를 위해 round 사용
             System.out.println();
             System.out.println("1. 주문        2. 메뉴판" );
             System.out.println("-------------------------------------------------------");
@@ -46,6 +46,13 @@ public class Order extends Menu{
             // 주문완료시 수행
             if(type.equals("1"))
                 orderComplete(orderFoods, totalPrice);
+            else if (type.equals("2")) {
+                System.out.println("메뉴로 돌아갑니다.");
+            }
+            else{
+                System.out.println("잘못입력 하셨습니다. 다시 입력해주세요");
+                orders(orderFoods);
+            }
         }
         else
             System.out.println("장바구니가 비어있네요 메뉴로 돌아갑니다.");
@@ -94,6 +101,7 @@ public class Order extends Menu{
         }
         System.out.println();
         System.out.println("[ 총 판매금액 현황 ]");
+        //  double 형의 출력근사치 삭제를 위해 round 사용
         System.out.println("현재까지 총 판매된 금액은 [ W " + Math.round(getTotalPrice()*100)/100.0 + " ] 입니다");
         System.out.println();
         System.out.println("1. 돌아가기");
@@ -101,6 +109,11 @@ public class Order extends Menu{
         endbutton = sc.nextLine();
         if(endbutton.equals("1"))
             System.out.println("메인화면으로 돌아갑니다.");
+        else
+        {
+            System.out.println("잘못입력하셨습니다.");
+            totalOrderPrice();
+        }
     }
 
 
@@ -116,11 +129,16 @@ public class Order extends Menu{
             System.out.println("진행하던 주문이 취소되었습니다.");
             if(!orderFoods.isEmpty())
                 orderFoods.clear();
+            else System.out.println("장바구니가 비어있습니다. 메인메뉴로 돌아갑니다.");
         }
         else if(type.equals("2"))
         {
             partialOrderCancle(orderFoods);
         }
+        else if(type.equals("3"))
+            System.out.println("취소하셨습니다. 메인메뉴로 돌아갑니다.");
+        else System.out.println("잘못 입력하셨습니다. 메인메뉴로 돌아갑니다.");
+
     }
 
     // 부분 취소
@@ -146,7 +164,8 @@ public class Order extends Menu{
             System.out.println("-------------------------------------------------------");
             System.out.println("주문 목록");
             for (int i = 0; i < orderFoods.size(); i++) {
-                System.out.printf("%d. %-15s | W %.1f | %d개 | %s%n"
+                if(!cancleIndex.contains(i)) // 주문 취소 목록 추가시 주문목록에서 해당 음식 표시 제외
+                    System.out.printf("%d. %-15s | W %.1f | %d개 | %s%n"
                         ,i+1 ,orderFoods.get(i).getFoodName(),orderFoods.get(i).getPrice()
                         , orderFoods.get(i).getFoodCount() ,orderFoods.get(i).getExplain());
             }
@@ -171,87 +190,105 @@ public class Order extends Menu{
             System.out.println("나가기: 0");
             System.out.println("-------------------------------------------------------");
             // 주문 목록 선택
-            foodIndex = sc.nextInt()-1;
-            sc.nextLine();
-
-            // 취소기능에 대한 if문
-            if(foodIndex>=0 && inputCount >0 && !cancleIndex.contains(foodIndex) )
-            {
-                if(orderFoods.get(foodIndex).getFoodCount() >1 && foodIndex<orderFoods.size() ) // 선택한 음식의 개수가 2이상일 때
+            try {
+                foodIndex = sc.nextInt()-1;
+                sc.nextLine();
+                // 취소기능에 대한 if문
+                if(foodIndex>=0 && foodIndex<orderFoods.size() &&inputCount >0 && !cancleIndex.contains(foodIndex) )
                 {
-                    System.out.println("-------------------------------------------------------");
-                    System.out.println("선택하신 음식의 개수가 " +
-                            orderFoods.get(foodIndex).getFoodCount() + "개 입니다");
-                    System.out.println("1. 부분 취소        2. 전부 취소");
-                    System.out.println("-------------------------------------------------------");
-                    type = sc.nextLine(); // 취소 타입입력
-                    if(type.equals("1"))
+                    if(orderFoods.get(foodIndex).getFoodCount() >1) // 선택한 음식의 개수가 2이상일 때
                     {
                         System.out.println("-------------------------------------------------------");
-                        System.out.println("부분 취소를 선택하셨습니다 몇개를 취소하시겠습니까?");
-                        System.out.println("0: 돌아가기");
+                        System.out.println("선택하신 음식의 개수가 " +
+                                orderFoods.get(foodIndex).getFoodCount() + "개 입니다");
+                        System.out.println("1. 부분 취소        2. 전부 취소");
                         System.out.println("-------------------------------------------------------");
-                        while (true){
-                            System.out.println("개수를 입력해주세요.");
-                            foodCoundNum = sc.nextInt();
-                            sc.nextLine();
-                            if(foodCoundNum==0)
-                                break;
-                            else if(orderFoods.get(foodIndex).getFoodCount() - foodCoundNum == 0)
-                            {
-                                System.out.println("전부 취소하셨습니다");
-                                cancleIndex.add(foodIndex);
-                                inputCount--;
-                                break;
-                            }
-                            else if(orderFoods.get(foodIndex).getFoodCount() - foodCoundNum < 0)
-                            {
-                                System.out.println("수량을 초과해서 입력했습니다. 다시 입력해주세요");
-                            }
-                            else
-                            {
-                                System.out.println( foodCoundNum + "개 취소를 입력하셨습니다.");
-                                System.out.println("다시 입력하시겠습니까?");
-                                System.out.println("1.예         2.아니오");
-                                reEnter = sc.nextLine();
-                                if(reEnter.equals("1"))
+                        type = sc.nextLine(); // 취소 타입입력
+                        if(type.equals("1"))
+                        {
+                            System.out.println("-------------------------------------------------------");
+                            System.out.println("부분 취소를 선택하셨습니다 몇개를 취소하시겠습니까?");
+                            System.out.println("0: 돌아가기");
+                            System.out.println("-------------------------------------------------------");
+                            while (true){
+                                System.out.println("개수를 입력해주세요.");
+                                foodCoundNum = sc.nextInt(); // 중복 차감할 개수 입력
+                                sc.nextLine();
+                                // 중복 차감시 0, 0보다 작을경우, 0보다 클경우 조건문
+                                if(foodCoundNum==0)
+                                    break;
+                                else if(orderFoods.get(foodIndex).getFoodCount() - foodCoundNum == 0)
                                 {
-                                    System.out.println("개수를 입력해주세요~");
-                                    foodCoundNum = sc.nextInt();
-                                    sc.nextLine();
-                                    cancleCountIndexMap.put(orderFoods.get(foodIndex).getFoodName(),foodCoundNum);
+                                    System.out.println("전부 취소하셨습니다");
                                     cancleIndex.add(foodIndex);
+                                    inputCount--;
+                                    break;
                                 }
-                                else{
-                                    cancleCountIndexMap.put(orderFoods.get(foodIndex).getFoodName(),foodCoundNum);
-                                    cancleIndex.add(foodIndex);
+                                else if(orderFoods.get(foodIndex).getFoodCount() - foodCoundNum < 0)
+                                {
+                                    System.out.println("수량을 초과해서 입력했습니다. 다시 입력해주세요");
                                 }
-                                inputCount--;
-                                break;
+                                else
+                                {
+                                    System.out.println( foodCoundNum + "개 취소를 입력하셨습니다.");
+                                    System.out.println("다시 입력하시겠습니까?");
+                                    System.out.println("1.예         2.아니오");
+                                    reEnter = sc.nextLine(); // 타입 선택
+                                    if(reEnter.equals("1"))  // 1. 예입력시 데이터 재입력
+                                    {
+                                        System.out.println("개수를 입력해주세요~");
+                                        foodCoundNum = sc.nextInt();
+                                        sc.nextLine();
+                                        if(foodCoundNum < orderFoods.get(foodIndex).getFoodCount() && foodCoundNum >0)
+                                        {   cancleCountIndexMap.put(orderFoods.get(foodIndex).getFoodName(),foodCoundNum);
+                                            cancleIndex.add(foodIndex);
+                                            inputCount--;
+                                        }
+                                        else System.out.println("잘못된 입력정보입니다. 주문 목록 화면으로 돌아갑니다.");
+
+                                    }
+                                    else if(reEnter.equals("2")){ // 2. 아니오 입력시 데이터 저장
+                                        cancleCountIndexMap.put(orderFoods.get(foodIndex).getFoodName(),foodCoundNum);
+                                        cancleIndex.add(foodIndex);
+                                        inputCount--;
+                                    }
+                                    else System.out.println("잘못된 입력정보입니다. 주문 목록 화면으로 돌아갑니다.");
+                                    break;
+                                }
                             }
                         }
+                        else if (type.equals("2")) { // 중복이 없을때
+                            cancleIndex.add(foodIndex);
+                            inputCount--;
+                        }
+                        else System.out.println("잘못된 입력 정보입니다 주문 목록 화면으로 돌아갑니다");
                     }
-                    else if (type.equals("2")) { // 중복이 없을때
+                    else // 모두 취소
+                    {
                         cancleIndex.add(foodIndex);
                         inputCount--;
                     }
                 }
-                else
-                {
-                    cancleIndex.add(foodIndex);
-                    inputCount--;
-                }
+                else if(cancleIndex.contains(foodIndex)) // 전에 취소한 음식이 있는지 확인
+                    System.out.println("이미 취소하신 음식입니다. 다시 선택해주세요.");
+                else if(foodIndex>orderFoods.size()-1) // 목록잘못했는지 확인
+                    System.out.println("취소목록에 번호가 없습니다. 다시선택해주세요");
+                else if(foodIndex == -1) // 종료
+                    break;
+                else System.out.println("숫자정보를 입력해주세요"); // 예외처리
             }
-            else if(cancleIndex.contains(foodIndex))
-                System.out.println("이미 취소하신 음식입니다. 다시 선택해주세요.");
-            else if(foodIndex>orderFoods.size()-1)
-                System.out.println("취소목록에 번호가 없습니다. 다시선택해주세요");
-            else if(foodIndex == -1)
-                break;
+            catch (InputMismatchException e)
+            {
+                sc.nextLine();
+                System.out.println("숫자를 입력해주세요.");
+            }
+
         }
 
+        // 취소목록 Data 처리
         if(!cancleIndex.isEmpty())
         {
+            // 취소목록 Data 출력
             System.out.println("-------------------------------------------------------");
             System.out.println("취소하실 음식 목록");
             for (int i = 0; i < cancleIndex.size(); i++) {
@@ -273,6 +310,8 @@ public class Order extends Menu{
             System.out.println("취소하시겠습니까?");
             System.out.println("1. 확인        2. 취소");
             type = sc.nextLine();
+            System.out.println("-------------------------------------------------------");
+            // 취소 데이터 장바구니에 입력
             if(type.equals("1"))
             {
                 int count=0;
@@ -290,15 +329,23 @@ public class Order extends Menu{
                     }
 
                 }
+                // Data 변경후 저장했었던 데이터 클리어
                 cancleIndex.clear();
                 cancleCountIndexMap.clear();
             }
-            else
+            // 취소시 저장했었던 데이터 클리어
+            else if(type.equals("2"))
             {
                 cancleIndex.clear();
                 cancleCountIndexMap.clear();
             }
-            System.out.println("-------------------------------------------------------");
+            // 잘못입력 예외처리
+            else {
+                System.out.println("잘못입력 하셨습니다 처음으로 돌아갑니다.");
+                cancleIndex.clear();
+                cancleCountIndexMap.clear();
+                partialOrderCancle(orderFoods);
+            }
         }
         else System.out.println("취소할 음식이 없음으로 메뉴로 돌아갑니다.");
     }

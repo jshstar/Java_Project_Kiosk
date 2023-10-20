@@ -2,6 +2,7 @@ package kiosk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Goods extends Menu {
@@ -36,24 +37,25 @@ public class Goods extends Menu {
 
 
     public void start() {
-        String type;
+        int type;
         end:
         while(true)
         {
             mainMenu();
             type = getMenuType();
             switch (type) {
-                case "0" -> orderInfo.totalOrderPrice(); // 판매내역 조회
-                case "1" -> foodsMenu(BUGERS_LIST); // 버거 메뉴
-                case "2" -> foodsMenu(FROZEN_CUSTARD); // 아이스크림 메뉴
-                case "3" -> foodsMenu(DRINK); // 음료 메뉴
-                case "4" -> foodsMenu(BEER); // 맥주 메뉴
-                case "5" -> orderInfo.orders(orderBasket); // 주문메뉴창
-                case "6" -> orderInfo.orderCancle(orderBasket); // 주문 취소
-                case "10" -> { // 종료
+                case 0 -> orderInfo.totalOrderPrice(); // 판매내역 조회
+                case 1 -> foodsMenu(BUGERS_LIST); // 버거 메뉴
+                case 2 -> foodsMenu(FROZEN_CUSTARD); // 아이스크림 메뉴
+                case 3 -> foodsMenu(DRINK); // 음료 메뉴
+                case 4 -> foodsMenu(BEER); // 맥주 메뉴
+                case 5 -> orderInfo.orders(orderBasket); // 주문메뉴창
+                case 6 -> orderInfo.orderCancle(orderBasket); // 주문 취소
+                case 10 -> { // 종료
+                    sc.close();
                     break end;
                 }
-                default -> System.out.println("잘못 입력하셨습니다. 다시 선택해 주세요.");
+                default -> System.out.println("잘못 입력하셨습니다. 다시 선택해 주세요."); // 잘못입력 예외 처리
             }
         }
     }
@@ -62,28 +64,43 @@ public class Goods extends Menu {
     // 음식 메뉴창
     public void foodsMenu(ArrayList<FoodData> foodList)
     {
-        String foodtype = getMenuType();
+        int foodtype = getMenuType();
+        int chooseNum;
         System.out.println("-------------------------------------------------------");
         System.out.println("SHAKESHACK BURGER 에 오신걸 환영합니다.");
         System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.");
         System.out.println();
-        System.out.println(FOODTITLE[Integer.parseInt(foodtype)-1]);
+        System.out.println(FOODTITLE[foodtype-1]);
         // 음식 Data 출력
         for (int i = 0; i <  foodList.size(); i++) {
             System.out.printf("%d. %-15s | W %.1f | %s%n"
                     , i + 1, foodList.get(i).getFoodName(),foodList.get(i).getChosePrice()[0], foodList.get(i).getExplain());
         }
         System.out.println("-------------------------------------------------------");
-        foodtype = sc.nextLine();
-        shoppingBasket(foodList,foodtype);
+        try // Scanner 예외처리
+        {
+            chooseNum = sc.nextInt();
+            sc.nextLine();
+            if(chooseNum< foodList.size() && chooseNum >0)
+                shoppingBasket(foodList,chooseNum);
+            else{
+                System.out.println("잘못된 숫자 정보입니다 다시입력해주세요");
+                foodsMenu(foodList);
+            }
+        }
+        catch (InputMismatchException e){
+            System.out.println("잘못된 숫자를 입력하셨습니다 다시 입력해주세요");
+            sc.nextLine();
+            foodsMenu(foodList);
+        }
     }
 
     // 주문 확인정보창
-    public void shoppingBasket(ArrayList<FoodData> foodList, String foodType)
+    public void shoppingBasket(ArrayList<FoodData> foodList, int foodType)
     {
         String addtype;
         int size =0;
-        int index = Integer.parseInt(foodType)-1;
+        int index = foodType-1;
         if(foodList.get(index).getChosePrice()[1] !=0)
             size = chooseSize(foodList, index);
         String name = foodList.get(index).getFoodName();
@@ -99,7 +116,6 @@ public class Goods extends Menu {
         System.out.println("1. 확인        2. 취소");
         System.out.println("-------------------------------------------------------");
         addtype = sc.nextLine();
-
         // 장바구니 추가시 유저의 장바구니에 데이터 입력
         if(addtype.equals("1"))
         {
@@ -124,11 +140,15 @@ public class Goods extends Menu {
         {
             System.out.println("취소되었습니다.");
         }
+        else{
+            System.out.println("잘못 입력하셨습니다. 다시 입력해주세요");
+            shoppingBasket(foodList,foodType);
+        }
     }
 
     // 사이즈 선택메뉴
     public int chooseSize(ArrayList<FoodData> foodData,int index){
-        int chooseType;
+        int chooseType =0;
         System.out.println("-------------------------------------------------------");
 
         System.out.printf("%-15s | W %.1f | %s%n"
@@ -140,7 +160,21 @@ public class Goods extends Menu {
                 , foodData.get(index).getChosePrice()[0],foodData.get(index).getChosePrice()[1]);
         System.out.println("-------------------------------------------------------");
         String type = sc.nextLine();
-        chooseType = (type.equals("1")) ? 0:1;
+        if(type.equals("1"))
+        {
+            System.out.println("Single을 선택하셨습니다");
+            chooseType =0;
+        }
+        else if (type.equals("2"))
+        {
+            System.out.println("Double을 선택하셨습니다");
+            chooseType =1;
+        }
+        else
+        {
+            System.out.println("잘못 입력하셨습니다. 다시 입력해주세요");
+            chooseSize(foodData,index);
+        }
         return chooseType;
     }
 }

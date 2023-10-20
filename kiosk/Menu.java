@@ -1,5 +1,6 @@
 package kiosk;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -14,13 +15,14 @@ public class Menu {
     protected final String[] ORDERTITLE = {"[ Orders ]", "[ Total ]"};
     protected final String[] FOODTITLE = {"[ Burgers MENU ]", "[ Forzen Custard MENU ]"
                                         , "[ Drink MENU ]", "[ Beer MENU ]"};
-    private String menuType; // menu 선택창 번호 입력
+    private int menuType; // menu 선택창 번호 입력
     Scanner sc = new Scanner(System.in);
 
     // 음식 종류 메뉴창
     public void mainMenu() {
 
-        String type;
+        // 메뉴 출력
+        int type;
         System.out.println("-------------------------------------------------------");
         System.out.println("SHAKESHACK BURGER 에 오신걸 환영합니다.");
         System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.");
@@ -38,14 +40,21 @@ public class Menu {
             }
         }
         System.out.println("-------------------------------------------------------");
-        type = sc.nextLine();
-        setMenuType(type);
+        try{
+            type = sc.nextInt();
+            sc.nextLine();
+            setMenuType(type);
+        }catch (InputMismatchException e)
+        {
+            sc.nextLine();
+            System.out.println("잘못된 입력정보입니다 숫자를 입력해주세요");
+        }
     }
 
-    public void setMenuType(String type){
+    public void setMenuType(int type){
         this.menuType = type;
     }
-    public String getMenuType(){
+    public int getMenuType(){
         return this.menuType;
     }
 
