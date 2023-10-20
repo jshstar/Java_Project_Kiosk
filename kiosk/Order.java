@@ -1,7 +1,5 @@
 package kiosk;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Order extends Menu{
@@ -17,7 +15,9 @@ public class Order extends Menu{
     }
 
     double totalPrice =0;
-    public void orders(ArrayList<FoodData> orderFoods){ // 주문 메뉴
+
+    // 주문 메뉴
+    public void orders(ArrayList<FoodData> orderFoods){
         String type;
         double totalPrice=0;
         if(!orderFoods.isEmpty())
@@ -25,40 +25,48 @@ public class Order extends Menu{
             System.out.println("-------------------------------------------------------");
             System.out.println("아래와 같이 주문 하시겠습니까?");
             System.out.println(ORDERTITLE[0]);
+            // 주문 목록 출력 및 가격 토탈값 계산
             for (FoodData foodInfo: orderFoods ) {
                 System.out.printf("%-15s | W %.1f | %d개 | %s%n"
                         , foodInfo.getName(),foodInfo.getPrice(), foodInfo.getFoodCount() ,foodInfo.getExplain());
+
+                // 주문한 총액 연산
                 if(foodInfo.getFoodCount()>1)
-                {
                     totalPrice+=foodInfo.price*foodInfo.getFoodCount();
-                    for (int i = 0; i < foodInfo.getFoodCount(); i++) {
-                        sellOrders.add(new SellOrders(foodInfo.getName(),foodInfo.getPrice()));
-                    }
-                }
-                else
-                {
-                    totalPrice += foodInfo.price;
-                    sellOrders.add(new SellOrders(foodInfo.getName(),foodInfo.getPrice()));
-                }
+
+                else totalPrice += foodInfo.price;
             }
-            setTotalPrice(totalPrice);
+
             System.out.println(ORDERTITLE[1]);
             System.out.println("W " + totalPrice);
             System.out.println();
             System.out.println("1. 주문        2. 메뉴판" );
             System.out.println("-------------------------------------------------------");
             type = sc.nextLine();
+            // 주문완료시 수행
             if(type.equals("1"))
-            {
-                orderComplete(orderFoods);
-            }
+                orderComplete(orderFoods, totalPrice);
         }
         else
             System.out.println("장바구니가 비어있네요 메뉴로 돌아갑니다.");
 
     }
 
-    public void orderComplete(ArrayList<FoodData> orderFoods){ // 주문완료시 수행
+    // 주문 완료 메뉴
+    public void orderComplete(ArrayList<FoodData> orderFoods , double totalPrice){
+        // 주문한 총액 연산
+        for (FoodData foodInfo: orderFoods ) {
+            if(foodInfo.getFoodCount()>1)
+            {
+                for (int i = 0; i < foodInfo.getFoodCount(); i++) {
+                    sellOrders.add(new SellOrders(foodInfo.getName(),foodInfo.getPrice()));
+                }
+            }
+            else sellOrders.add(new SellOrders(foodInfo.getName(),foodInfo.getPrice()));
+        }
+        setTotalPrice(totalPrice);
+
+        // 주문 출력
         System.out.println("-------------------------------------------------------");
         System.out.println("주문 완료되었습니다!");
         this.waitNum++;
@@ -72,13 +80,17 @@ public class Order extends Menu{
             throw new RuntimeException(e);
         }
     }
-    public void totalOrderPrice(){ // 총 판매금액 현황
+
+
+
+    // 총 판매금액 현황 메뉴
+    public void totalOrderPrice(){
         String endbutton;
         System.out.println("-------------------------------------------------------");
         System.out.println("[ 총 판매상품 목록 현황 ]");
         System.out.println("현재까지 총 판매된 상품 목록은 아래와 같습니다.");
         for (SellOrders sellData: sellOrders) {
-            System.out.printf("- %-10s | W %.1f %n", sellData.getOrderFood(),sellData.getOrderPirce());
+            System.out.printf("- %-10s | W %.1f %n", sellData.getOrderFood(),sellData.getOrderPrice());
         }
         System.out.println();
         System.out.println("[ 총 판매금액 현황 ]");
@@ -91,6 +103,8 @@ public class Order extends Menu{
             System.out.println("메인화면으로 돌아갑니다.");
     }
 
+
+    // 주문 취소 메뉴
     public void orderCancle(ArrayList<FoodData> orderFoods){
         String type;
         System.out.println("진행하던 주문을 취소하시겠습니까?");

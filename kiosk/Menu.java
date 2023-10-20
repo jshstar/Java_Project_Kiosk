@@ -3,6 +3,8 @@ package kiosk;
 import java.util.Scanner;
 
 public class Menu {
+
+    //MENU Data
     protected final String[][] SHACKSHACKMENU = {{"Burgers","Forzen Custard","Drinks","Beer"},
                                         {"앵거스 비프 통살을 다져만든 버거","매장에서 신선하게 만드는 아이스크림"
                                         ,"매장에서 직접 만드는 음료","뉴욕 브루클린 브루어리에서 양조한 맥주"}};
@@ -13,10 +15,10 @@ public class Menu {
     protected final String[] FOODTITLE = {"[ Burgers MENU ]", "[ Forzen Custard MENU ]"
                                         , "[ Drink MENU ]", "[ Beer MENU ]"};
     private String menuType; // menu 선택창 번호 입력
-    boolean orderstart =false; // 주문 시작 및 종료 boolean
     Scanner sc = new Scanner(System.in);
 
-    public void mainMenu() { // 음식 종류 메뉴창
+    // 음식 종류 메뉴창
+    public void mainMenu() {
 
         String type;
         System.out.println("-------------------------------------------------------");
@@ -47,14 +49,7 @@ public class Menu {
         return this.menuType;
     }
 
-    public boolean getOrderStart()
-    {
-        return this.orderstart;
-    }
 
-    public boolean setOrderStart(boolean orderStart)
-    {
-        return this.orderstart = orderStart;
-    }
+
 
 }

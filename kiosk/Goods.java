@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Goods extends Menu {
+
+    // 음식 Data
     private static final ArrayList<FoodData> BUGERS_LIST = new ArrayList<>(Arrays.asList(
             new FoodData("ShackBurger", new double[]{6.9,10.9}, "토마토, 양상추, 쉑소스가 토핑된 치즈버거")
             , new FoodData("SmokeShack", new double[]{8.9,12.9}, "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거")
@@ -29,8 +31,8 @@ public class Goods extends Menu {
             new FoodData("ShackMeister Ale", new double[]{8.9,0}, "쉐이크쉨 버거를 위해 뉴옥 브루클린 브루어리에서 특별히 양조한 에일 맥주")));
 
 
-    private ArrayList<FoodData> orderBasket = new ArrayList<>();
-    private Order orderInfo = new Order();
+    private ArrayList<FoodData> orderBasket = new ArrayList<>(); // 유저 장바구니 객체
+    private Order orderInfo = new Order(); // OrderData 객체
 
 
     public void start() {
@@ -41,14 +43,14 @@ public class Goods extends Menu {
             mainMenu();
             type = getMenuType();
             switch (type) {
-                case "0" -> orderInfo.totalOrderPrice();
-                case "1" -> foodsMenu(BUGERS_LIST);
-                case "2" -> foodsMenu(FROZEN_CUSTARD);
-                case "3" -> foodsMenu(DRINK);
-                case "4" -> foodsMenu(BEER);
-                case "5" -> orderInfo.orders(orderBasket);
-                case "6" -> orderInfo.orderCancle(orderBasket);
-                case "10" -> {
+                case "0" -> orderInfo.totalOrderPrice(); // 판매내역 조회
+                case "1" -> foodsMenu(BUGERS_LIST); // 버거 메뉴
+                case "2" -> foodsMenu(FROZEN_CUSTARD); // 아이스크림 메뉴
+                case "3" -> foodsMenu(DRINK); // 음료 메뉴
+                case "4" -> foodsMenu(BEER); // 맥주 메뉴
+                case "5" -> orderInfo.orders(orderBasket); // 주문메뉴창
+                case "6" -> orderInfo.orderCancle(orderBasket); // 주문 취소
+                case "10" -> { // 종료
                     break end;
                 }
             }
@@ -85,6 +87,7 @@ public class Goods extends Menu {
         String name = foodList.get(index).getName();
         String explain = foodList.get(index).getExplain();
         double price = foodList.get(index).getChosePrice()[size];
+        // 출력
         System.out.println("-------------------------------------------------------");
         System.out.printf("%-15s | W %.1f | %s%n"
                 ,foodList.get(index).getName()
@@ -94,6 +97,8 @@ public class Goods extends Menu {
         System.out.println("1. 확인        2. 취소");
         System.out.println("-------------------------------------------------------");
         addtype = sc.nextLine();
+
+        // 장바구니 추가시 유저의 장바구니에 데이터 입력
         if(addtype.equals("1"))
         {
             System.out.println(foodList.get(index).getName() + "가 장바구니에 추가되었습니다.");
@@ -119,7 +124,7 @@ public class Goods extends Menu {
         }
     }
 
-    // 사이즈 선택창
+    // 사이즈 선택메뉴
     public int chooseSize(ArrayList<FoodData> foodData,int index){
         int chooseType;
         System.out.println("-------------------------------------------------------");
