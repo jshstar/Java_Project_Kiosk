@@ -3,7 +3,7 @@
 ![image](https://github.com/jshstar/Java_Project_Kiosk/assets/141135747/f9ee1290-29c6-4abe-84be-155443bb0fe7)
 
 코드 동작시 확인 가능한 기능
-1. 메인메뉴판
+1. [매안 매뉴판](#메인메뉴판)
 2. 상품 메뉴판
 3. 상품 선택 및 상품 옵션기능
 4. 주문 화면
