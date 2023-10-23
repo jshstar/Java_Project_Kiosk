@@ -1,11 +1,10 @@
 package kiosk;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Order extends Menu{
     static int waitNum = 0; // 주문 대기 순서
-    private ArrayList<SellOrders> sellOrders = new ArrayList<>();
+    private ArrayList<SellOrders> sellOrders = new ArrayList<>(); // 총 주문금엑에 대한 출력정보를 담은 객체
 
     public double getTotalPrice() {
         return this.totalPrice;
@@ -238,9 +237,11 @@ public class Order extends Menu{
                             }
                             else
                             {
+                                System.out.println("-------------------------------------------------------");
                                 System.out.println( foodCoundNum + "개 취소를 입력하셨습니다.");
-                                System.out.println("다시 입력하시겠습니까?");
+                                System.out.println("입력 하시겠습니까?");
                                 System.out.println("1. 입력        2.재입력");
+                                System.out.println("-------------------------------------------------------");
                                 reEnter = sc.nextLine(); // 타입 선택
                                 if(reEnter.equals("1"))  //1. 입력시 데이터 저장
                                 {
@@ -304,8 +305,9 @@ public class Order extends Menu{
             }
             System.out.println("취소하시겠습니까?");
             System.out.println("1. 확인        2. 취소");
-            type = sc.nextLine();
             System.out.println("-------------------------------------------------------");
+            type = sc.nextLine();
+
             // 취소 데이터 장바구니에 입력
             if(type.equals("1"))
             {
@@ -327,12 +329,14 @@ public class Order extends Menu{
                 // Data 변경후 저장했었던 데이터 클리어
                 cancleIndex.clear();
                 cancleCountIndexMap.clear();
+                System.out.println("선택하신 상품이 취소되었습니다.");
             }
             // 취소시 저장했었던 데이터 클리어
             else if(type.equals("2"))
             {
                 cancleIndex.clear();
                 cancleCountIndexMap.clear();
+                System.out.println("선택하신 상품이 취소되었습니다.");
             }
             // 잘못입력 예외처리
             else {

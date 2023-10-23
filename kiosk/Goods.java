@@ -114,6 +114,7 @@ public class Goods extends Menu {
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println("1. 확인        2. 취소");
         System.out.println("-------------------------------------------------------");
+
         addtype = sc.nextLine();
         // 장바구니 추가시 유저의 장바구니에 데이터 입력
         if(addtype.equals("1"))
@@ -155,7 +156,7 @@ public class Goods extends Menu {
                 ,foodData.get(index).getChosePrice()[0]
                 , foodData.get(index).getExplain());
         System.out.println("위 메뉴의 어떤 옵션으로 추가하시겠습니까?");
-        System.out.printf("1. Single %.1f     2. double %.1f %n"
+        System.out.printf("1. Single %.1f     2. Double %.1f %n"
                 , foodData.get(index).getChosePrice()[0],foodData.get(index).getChosePrice()[1]);
         System.out.println("-------------------------------------------------------");
         String type = sc.nextLine();

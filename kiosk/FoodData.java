@@ -1,6 +1,7 @@
 package kiosk;
 
-public class FoodData extends Goods{
+
+public class FoodData{
      // 음식 데이터 및 유저의 장바구니 클래스
      public String foodname; // 음식명
      public double[] chosePrice = new double[2]; // 가격 0: Single 1: Double
