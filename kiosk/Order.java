@@ -272,7 +272,7 @@ public class Order extends Menu{
             }
             else if(cancleIndex.contains(foodIndex)) // 전에 취소한 음식이 있는지 확인
                 System.out.println("이미 취소하신 음식입니다. 다시 선택해주세요.");
-            else if(foodIndex>= orderFoods.size()) // 목록잘못했는지 확인
+            else if(foodIndex>= orderFoods.size()) // 목록에 입력한 번호가 있는지 확인 없을시 재입력
                 System.out.println("취소목록에 번호가 없습니다. 다시선택해주세요");
             else if(foodIndex == -1) // 종료
                 break;
