@@ -77,20 +77,19 @@ public class Goods extends Menu {
                     , i + 1, foodList.get(i).getFoodName(),foodList.get(i).getChosePrice()[0], foodList.get(i).getExplain());
         }
         System.out.println("-------------------------------------------------------");
-        try // Scanner 예외처리
+
+
+        while (!sc.hasNextInt())
         {
-            chooseNum = sc.nextInt();
-            sc.nextLine();
-            if(chooseNum< foodList.size() && chooseNum >0)
-                shoppingBasket(foodList,chooseNum);
-            else{
-                System.out.println("잘못된 숫자 정보입니다 다시입력해주세요");
-                foodsMenu(foodList);
-            }
+            sc.next();
+            System.out.println("문자를 입력하셨습니다. 다시 입력해주세요");
         }
-        catch (InputMismatchException e){
-            System.out.println("잘못된 숫자를 입력하셨습니다 다시 입력해주세요");
-            sc.nextLine();
+        chooseNum = sc.nextInt();
+        sc.nextLine();
+        if(chooseNum< foodList.size()+1 && chooseNum >0)
+            shoppingBasket(foodList,chooseNum);
+        else{
+            System.out.println("잘못된 숫자를 입력하셨습니다. 숫자로 다시 입력해주세요");
             foodsMenu(foodList);
         }
     }
