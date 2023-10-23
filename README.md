@@ -1,5 +1,5 @@
 # Java_Project_Kiosk
-1. 메뉴판을 보고 주문할 수 있는 Java 프로그램
+# 1. 메뉴판을 보고 주문할 수 있는 Java 프로그램
 ![image](https://github.com/jshstar/Java_Project_Kiosk/assets/141135747/f9ee1290-29c6-4abe-84be-155443bb0fe7)
 
 코드 동작시 확인 가능한 기능
@@ -15,7 +15,7 @@
 10. 총 판매금액 조회 기능
 11. 총 판매상품 목록 기능
 
-###1. 메인 메뉴판
+### 1. 메인 메뉴판
 ```
 "SHAKESHACK BURGER 에 오신걸 환영합니다."
 아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.
