@@ -319,4 +319,4 @@ SHAKESHACK BURGER 에 오신걸 환영합니다.
 -------------------------------------------------------
 ```
 ## Diagram
-![클래스다이어그램.jpg](img%2F%C5%AC%B7%A1%BD%BA%B4%D9%C0%CC%BE%EE%B1%D7%B7%A5.jpg)
+![클래스다이어그램.jpg](https://github.com/jshstar/Java_Project_Kiosk/blob/main/img/%ED%81%B4%EB%9E%98%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.jpg)
