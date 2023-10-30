@@ -1,19 +1,18 @@
-package kiosk;
+package kiosk.domain;
 
 
 public class FoodData{
      // 음식 데이터 및 유저의 장바구니 클래스
      public String foodname; // 음식명
-     public double[] chosePrice = new double[2]; // 가격 0: Single 1: Double
+     public ChosePrice chosePrice; // 가격 Single  Double
      public double price; // 주문할 음식의 가격
      public String foodExplain;// 음식 설명
      public int foodcount; // 주문한 음식 개수
 
      // 음식 메뉴 Data 생성자
-    public FoodData(String foodname, double[] price, String foodExplain) {
+    public FoodData(String foodname, ChosePrice price, String foodExplain) {
         this.foodname = foodname;
-        this.chosePrice[0] = price[0];
-        this.chosePrice[1] = price[1];
+        this.chosePrice = price;
         this.foodExplain = foodExplain;
     }
     // 유저 장바구니 Data 생성자
@@ -34,7 +33,7 @@ public class FoodData{
         this.foodcount += num;
     }
     //public void init
-    public double[] getChosePrice(){
+    public ChosePrice getChosePrice(){
         return this.chosePrice;
     }
     public double getPrice(){

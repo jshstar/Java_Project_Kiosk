@@ -1,8 +1,12 @@
-package kiosk;
+package kiosk.handler;
 
-import java.util.*;
+import kiosk.domain.FoodData;
+import kiosk.domain.SellOrders;
 
-public class Order extends Menu{
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+public class Order extends Menu {
     static int waitNum = 0; // 주문 대기 순서
     private ArrayList<SellOrders> sellOrders = new ArrayList<>(); // 총 주문금엑에 대한 출력정보를 담은 객체
 
@@ -57,6 +61,8 @@ public class Order extends Menu{
             System.out.println("장바구니가 비어있네요 메뉴로 돌아갑니다.");
 
     }
+
+
 
     // 주문 완료 메뉴
     public void orderComplete(ArrayList<FoodData> orderFoods , double totalPrice){

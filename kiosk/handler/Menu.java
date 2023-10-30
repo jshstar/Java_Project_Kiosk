@@ -1,4 +1,4 @@
-package kiosk;
+package kiosk.handler;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,7 +15,7 @@ public class Menu {
     protected final String[] ORDERTITLE = {"[ Orders ]", "[ Total ]"};
     protected final String[] FOODTITLE = {"[ Burgers MENU ]", "[ Forzen Custard MENU ]"
                                         , "[ Drink MENU ]", "[ Beer MENU ]"};
-    private int menuType; // menu 선택창 번호 입력
+    private static int menuType; // menu 선택창 번호 입력
     Scanner sc = new Scanner(System.in);
 
     // 음식 종류 메뉴창
@@ -52,10 +52,10 @@ public class Menu {
     }
 
     public void setMenuType(int type){
-        this.menuType = type;
+        menuType = type;
     }
     public int getMenuType(){
-        return this.menuType;
+        return menuType;
     }
 
 
