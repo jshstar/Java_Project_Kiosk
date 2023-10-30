@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Goods extends Menu {
-    private static final ArrayList<FoodData> BUGERS_LIST = new ArrayList<>(Arrays.asList(
+    private static final ArrayList<FoodData> BURGERS_LIST = new ArrayList<>(Arrays.asList(
             new FoodData("ShackBurger", new ChosePrice(6.9,10.9), "토마토, 양상추, 쉑소스가 토핑된 치즈버거")
             , new FoodData("SmokeShack", new ChosePrice(8.9,12.9), "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거")
             , new FoodData("Shroom Burger",new ChosePrice(9.4,12.4) , "몬스터 치즈와 체다 치즈로 속을 채운 베지테리안 버거")
@@ -37,7 +37,7 @@ public class Goods extends Menu {
         ArrayList<FoodData> food;
         switch(num)
         {
-            case 1 -> {food = BUGERS_LIST;}
+            case 1 -> {food = BURGERS_LIST;}
             case 2-> {food = FROZEN_CUSTARD;}
             case 3->{food = DRINK;}
             case 4->{food = BEER;}
