@@ -2,24 +2,22 @@ package kiosk.handler;
 
 import kiosk.domain.FoodData;
 import kiosk.domain.SellOrders;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 public class Order extends Menu {
-    static int waitNum = 0; // 주문 대기 순서
+    private static int waitNum = 0; // 주문 대기 순서
     private ArrayList<SellOrders> sellOrders = new ArrayList<>(); // 총 주문금엑에 대한 출력정보를 담은 객체
 
-    public double getTotalPrice() {
+    private double getTotalPrice() {
         return this.totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    private void setTotalPrice(double totalPrice) {
         this.totalPrice += totalPrice;
     }
 
-    double totalPrice =0;
+    private double totalPrice =0;
 
     // 주문 메뉴
     public void orders(ArrayList<FoodData> orderFoods){
@@ -60,8 +58,8 @@ public class Order extends Menu {
 
             // 주문한 총액 연산
             if(foodInfo.getFoodCount()>1)
-                totalPrice+=foodInfo.price*foodInfo.getFoodCount();
-            else totalPrice += foodInfo.price;
+                totalPrice+=foodInfo.getPrice()*foodInfo.getFoodCount();
+            else totalPrice += foodInfo.getPrice();
         }
         return totalPrice;
     }
@@ -74,7 +72,7 @@ public class Order extends Menu {
         // 주문 출력
         System.out.println("-------------------------------------------------------");
         System.out.println("주문 완료되었습니다!");
-        this.waitNum++;
+        waitNum++;
         System.out.println("대기번호는 " + "[ " + waitNum + " ]" + "입니다.");
         System.out.println("3초후 메뉴판으로 돌아갑니다.");
         System.out.println("-------------------------------------------------------");

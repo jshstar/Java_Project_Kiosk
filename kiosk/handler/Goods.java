@@ -31,7 +31,6 @@ public class Goods extends Menu {
 
 
     private ArrayList<FoodData> orderBasket = new ArrayList<>(); // 유저 장바구니 객체
-//    private Order orderInfo = new Order(); // OrderData 객체
 
 
     public ArrayList<FoodData> returnFoodInfo(int num){

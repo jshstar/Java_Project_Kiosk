@@ -5,8 +5,8 @@ package kiosk.domain;
 // 유저가 구매한 주문 목록 저장 클래스
 public class SellOrders {
 
-    String orderFood; // 음식정보
-    double orderPrice; // 음식가격
+    private String orderFood; // 음식정보
+    private double orderPrice; // 음식가격
 
     // 주문 목록 생성자
     public SellOrders(String orderFood, double orderPirce) {

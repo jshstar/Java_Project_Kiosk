@@ -3,7 +3,6 @@ package kiosk.handler;
 import kiosk.domain.FoodData;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 public class MenuContext {
 
     Menu menu = new Menu();
