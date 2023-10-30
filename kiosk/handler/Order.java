@@ -4,6 +4,7 @@ import kiosk.domain.FoodData;
 import kiosk.domain.SellOrders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 public class Order extends Menu {
@@ -30,16 +31,7 @@ public class Order extends Menu {
             System.out.println("아래와 같이 주문 하시겠습니까?");
             System.out.println(ORDERTITLE[0]);
             // 주문 목록 출력 및 가격 토탈값 계산
-            for (FoodData foodInfo: orderFoods ) {
-                System.out.printf("%-15s | W %.1f | %d개 | %s%n"
-                        , foodInfo.getFoodName(),foodInfo.getPrice(), foodInfo.getFoodCount() ,foodInfo.getExplain());
-
-                // 주문한 총액 연산
-                if(foodInfo.getFoodCount()>1)
-                    totalPrice+=foodInfo.price*foodInfo.getFoodCount();
-                else totalPrice += foodInfo.price;
-            }
-
+            totalPrice = calculateOrderPrice(orderFoods,totalPrice);
             System.out.println(ORDERTITLE[1]);
             System.out.println("W " + Math.round(totalPrice*100)/100.0); // double 형의 출력근사치 삭제를 위해 round 사용
             System.out.println();
@@ -61,23 +53,24 @@ public class Order extends Menu {
             System.out.println("장바구니가 비어있네요 메뉴로 돌아갑니다.");
 
     }
+    public double calculateOrderPrice(ArrayList<FoodData> orderFoods, double totalPrice){
+        for (FoodData foodInfo: orderFoods ) {
+            System.out.printf("%-15s | W %.1f | %d개 | %s%n"
+                    , foodInfo.getFoodName(),foodInfo.getPrice(), foodInfo.getFoodCount() ,foodInfo.getExplain());
 
+            // 주문한 총액 연산
+            if(foodInfo.getFoodCount()>1)
+                totalPrice+=foodInfo.price*foodInfo.getFoodCount();
+            else totalPrice += foodInfo.price;
+        }
+        return totalPrice;
+    }
 
 
     // 주문 완료 메뉴
     public void orderComplete(ArrayList<FoodData> orderFoods , double totalPrice){
         // 주문한 총액 연산
-        for (FoodData foodInfo: orderFoods ) {
-            if(foodInfo.getFoodCount()>1)
-            {
-                for (int i = 0; i < foodInfo.getFoodCount(); i++) {
-                    sellOrders.add(new SellOrders(foodInfo.getFoodName(),foodInfo.getPrice()));
-                }
-            }
-            else sellOrders.add(new SellOrders(foodInfo.getFoodName(),foodInfo.getPrice()));
-        }
-        setTotalPrice(totalPrice);
-
+        saveOrderPrice(orderFoods, totalPrice);
         // 주문 출력
         System.out.println("-------------------------------------------------------");
         System.out.println("주문 완료되었습니다!");
@@ -91,6 +84,19 @@ public class Order extends Menu {
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void saveOrderPrice(ArrayList<FoodData> orderFoods,double totalPrice){
+        for (FoodData foodInfo: orderFoods ) {
+            if(foodInfo.getFoodCount()>1)
+            {
+                for (int i = 0; i < foodInfo.getFoodCount(); i++) {
+                    sellOrders.add(new SellOrders(foodInfo.getFoodName(),foodInfo.getPrice()));
+                }
+            }
+            else sellOrders.add(new SellOrders(foodInfo.getFoodName(),foodInfo.getPrice()));
+        }
+        setTotalPrice(totalPrice);
     }
 
 
@@ -153,8 +159,8 @@ public class Order extends Menu {
         String reEnter; // 중복 개수 음식 다시 선택
         int foodCoundNum=1; // 중복된 음식 개수 변경 변수
         int inputCount = orderFoods.size(); // 유저가 제외한 음식 선택 개수 변수
-        ArrayList<Integer> cancleIndex = new ArrayList<>(); // 제회할 음식의 번호가 담긴 List
-        HashMap<String, Integer> cancleCountIndexMap = new HashMap<>(); // 음식의 중복을 제거할 변수인 HashMap <이름,중복제거>
+        ArrayList<Integer> cancelIndex = new ArrayList<>(); // 제회할 음식의 번호가 담긴 List
+        HashMap<String, Integer> cancelCountIndexMap = new HashMap<>(); // 음식의 중복을 제거할 변수인 HashMap <이름,중복제거>
         while(true)
         {
             // 취소 목록이 없을시 출력
@@ -168,7 +174,7 @@ public class Order extends Menu {
             System.out.println("-------------------------------------------------------");
             System.out.println("주문 목록");
             for (int i = 0; i < orderFoods.size(); i++) {
-                if(!cancleIndex.contains(i)) // 주문 취소 목록 추가시 주문목록에서 해당 음식 표시 제외
+                if(!cancelIndex.contains(i)) // 주문 취소 목록 추가시 주문목록에서 해당 음식 표시 제외
                     System.out.printf("%d. %-15s | W %.1f | %d개 | %s%n"
                         ,i+1 ,orderFoods.get(i).getFoodName(),orderFoods.get(i).getPrice()
                         , orderFoods.get(i).getFoodCount() ,orderFoods.get(i).getExplain());
@@ -178,17 +184,17 @@ public class Order extends Menu {
             System.out.println("-------------------------------------------------------");
             System.out.println("취소하실 음식을 입력해주세요");
             System.out.println("취소 목록");
-            for (int i = 0; i < cancleIndex.size(); i++) {
-                if(cancleCountIndexMap.containsKey(orderFoods.get(cancleIndex.get(i)).getFoodName()))
+            for (int i = 0; i < cancelIndex.size(); i++) {
+                if(cancelCountIndexMap.containsKey(orderFoods.get(cancelIndex.get(i)).getFoodName()))
                 {
                     System.out.printf("%d. %-15s | %d개 %n"
-                            ,cancleIndex.get(i)+1 ,orderFoods.get(cancleIndex.get(i)).getFoodName()
-                            ,cancleCountIndexMap.get(orderFoods.get(cancleIndex.get(i)).getFoodName()));
+                            ,cancelIndex.get(i)+1 ,orderFoods.get(cancelIndex.get(i)).getFoodName()
+                            ,cancelCountIndexMap.get(orderFoods.get(cancelIndex.get(i)).getFoodName()));
                 }
                 else{
                     System.out.printf("%d. %-15s | %d개 %n"
-                            ,cancleIndex.get(i)+1 ,orderFoods.get(cancleIndex.get(i)).getFoodName()
-                            , orderFoods.get(cancleIndex.get(i)).getFoodCount());
+                            ,cancelIndex.get(i)+1 ,orderFoods.get(cancelIndex.get(i)).getFoodName()
+                            , orderFoods.get(cancelIndex.get(i)).getFoodCount());
                 }
             }
             System.out.println("취소완료: 0");
@@ -202,7 +208,7 @@ public class Order extends Menu {
             foodIndex = sc.nextInt()-1;
             sc.nextLine();
             // 취소기능에 대한 if문
-            if(foodIndex>=0 && foodIndex<orderFoods.size() &&inputCount >0 && !cancleIndex.contains(foodIndex) )
+            if(foodIndex>=0 && foodIndex<orderFoods.size() &&inputCount >0 && !cancelIndex.contains(foodIndex) )
             {
                 if(orderFoods.get(foodIndex).getFoodCount() >1) // 선택한 음식의 개수가 2이상일 때
                 {
@@ -233,7 +239,7 @@ public class Order extends Menu {
                             else if(orderFoods.get(foodIndex).getFoodCount() - foodCoundNum == 0)
                             {
                                 System.out.println("전부 취소하셨습니다");
-                                cancleIndex.add(foodIndex);
+                                cancelIndex.add(foodIndex);
                                 inputCount--;
                                 break;
                             }
@@ -252,8 +258,8 @@ public class Order extends Menu {
                                 if(reEnter.equals("1"))  //1. 입력시 데이터 저장
                                 {
 
-                                    cancleCountIndexMap.put(orderFoods.get(foodIndex).getFoodName(),foodCoundNum);
-                                    cancleIndex.add(foodIndex);
+                                    cancelCountIndexMap.put(orderFoods.get(foodIndex).getFoodName(),foodCoundNum);
+                                    cancelIndex.add(foodIndex);
                                     inputCount--;
 
                                 }
@@ -266,18 +272,18 @@ public class Order extends Menu {
                         }
                     }
                     else if (type.equals("2")) { // 중복이 없을때
-                        cancleIndex.add(foodIndex);
+                        cancelIndex.add(foodIndex);
                         inputCount--;
                     }
                     else System.out.println("잘못된 입력 정보입니다 주문 목록 화면으로 돌아갑니다");
                 }
                 else // 모두 취소
                 {
-                    cancleIndex.add(foodIndex);
+                    cancelIndex.add(foodIndex);
                     inputCount--;
                 }
             }
-            else if(cancleIndex.contains(foodIndex)) // 전에 취소한 음식이 있는지 확인
+            else if(cancelIndex.contains(foodIndex)) // 전에 취소한 음식이 있는지 확인
                 System.out.println("이미 취소하신 음식입니다. 다시 선택해주세요.");
             else if(foodIndex>= orderFoods.size()) // 목록에 입력한 번호가 있는지 확인 없을시 재입력
                 System.out.println("취소목록에 번호가 없습니다. 다시선택해주세요");
@@ -288,24 +294,24 @@ public class Order extends Menu {
         }
 
         // 취소목록 Data 처리
-        if(!cancleIndex.isEmpty())
+        if(!cancelIndex.isEmpty())
         {
             // 취소목록 Data 출력
             System.out.println("-------------------------------------------------------");
             System.out.println("취소하실 음식 목록");
-            for (int i = 0; i < cancleIndex.size(); i++) {
-                if(cancleCountIndexMap.containsKey(orderFoods.get(cancleIndex.get(i)).getFoodName()))
+            for (int i = 0; i < cancelIndex.size(); i++) {
+                if(cancelCountIndexMap.containsKey(orderFoods.get(cancelIndex.get(i)).getFoodName()))
                 {
                     System.out.printf("%d. %-15s | W %.1f | %d개 %n"
-                            ,cancleIndex.get(i)+1 ,orderFoods.get(cancleIndex.get(i)).getFoodName()
-                            ,orderFoods.get(cancleIndex.get(i)).getPrice()
-                            ,cancleCountIndexMap.get(orderFoods.get(cancleIndex.get(i)).getFoodName()));
+                            ,cancelIndex.get(i)+1 ,orderFoods.get(cancelIndex.get(i)).getFoodName()
+                            ,orderFoods.get(cancelIndex.get(i)).getPrice()
+                            ,cancelCountIndexMap.get(orderFoods.get(cancelIndex.get(i)).getFoodName()));
                 }
                 else{
                     System.out.printf("%d. %-15s | W %.1f | %d개 %n"
-                            ,cancleIndex.get(i)+1 ,orderFoods.get(cancleIndex.get(i)).getFoodName()
-                            ,orderFoods.get(cancleIndex.get(i)).getPrice()
-                            , orderFoods.get(cancleIndex.get(i)).getFoodCount());
+                            ,cancelIndex.get(i)+1 ,orderFoods.get(cancelIndex.get(i)).getFoodName()
+                            ,orderFoods.get(cancelIndex.get(i)).getPrice()
+                            , orderFoods.get(cancelIndex.get(i)).getFoodCount());
                 }
 
             }
@@ -317,44 +323,49 @@ public class Order extends Menu {
             // 취소 데이터 장바구니에 입력
             if(type.equals("1"))
             {
-                int count=0;
-                Collections.sort(cancleIndex);
-                for (int i = 0; i < cancleIndex.size(); i++) {
-                    String foodName = orderFoods.get(cancleIndex.get(i)-count).getFoodName();
-                    if(cancleCountIndexMap.containsKey(foodName))
-                    {
-                        orderFoods.get(cancleIndex.get(i)-count)
-                                .setFoodCount(-cancleCountIndexMap.get(foodName));
-                    }
-                    else{
-                        orderFoods.remove(cancleIndex.get(i)-count);
-                        count++;
-                    }
 
-                }
+                inputCancelFoodDate(cancelIndex,orderFoods,cancelCountIndexMap);
                 // Data 변경후 저장했었던 데이터 클리어
-                cancleIndex.clear();
-                cancleCountIndexMap.clear();
+                cancelIndex.clear();
+                cancelCountIndexMap.clear();
                 System.out.println("선택하신 상품이 취소되었습니다.");
             }
             // 취소시 저장했었던 데이터 클리어
             else if(type.equals("2"))
             {
-                cancleIndex.clear();
-                cancleCountIndexMap.clear();
+                cancelIndex.clear();
+                cancelCountIndexMap.clear();
                 System.out.println("선택하신 상품이 취소되었습니다.");
             }
             // 잘못입력 예외처리
             else {
                 System.out.println("잘못입력 하셨습니다 처음으로 돌아갑니다.");
-                cancleIndex.clear();
-                cancleCountIndexMap.clear();
+                cancelIndex.clear();
+                cancelCountIndexMap.clear();
                 partialOrderCancle(orderFoods);
             }
         }
         else System.out.println("취소할 음식이 없음으로 메뉴로 돌아갑니다.");
     }
 
+    // 장바구니에서 취소목록에 있는 데이터 개수 축소 및 데이터 제거
+    public void inputCancelFoodDate(ArrayList<Integer> cancelIndex, ArrayList<FoodData> orderFoods
+            , HashMap<String, Integer> cancelCountIndexMap){
+        int count=0;
+        Collections.sort(cancelIndex);
+        for (int i = 0; i < cancelIndex.size(); i++) {
+            String foodName = orderFoods.get(cancelIndex.get(i)-count).getFoodName();
+            if(cancelCountIndexMap.containsKey(foodName))
+            {
+                orderFoods.get(cancelIndex.get(i)-count)
+                        .setFoodCount(-cancelCountIndexMap.get(foodName));
+            }
+            else{
+                orderFoods.remove(cancelIndex.get(i)-count);
+                count++;
+            }
+        }
+    }
 
 
 
